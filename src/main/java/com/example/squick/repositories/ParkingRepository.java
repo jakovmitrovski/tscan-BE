@@ -16,4 +16,5 @@ public interface ParkingRepository extends JpaRepository<Parking, Long> {
     Page<ExploreParkingProjection> findAllExplore();
     List<MapParkingProjection> findAllMap();
     Optional<ExploreParkingDetailsProjection> findParkingById(Long id);
+    Optional<Parking> findByName(String name);
 }

@@ -1,9 +1,10 @@
 package com.example.squick.models;
 
+import com.example.squick.models.dtos.ParkingDto;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity
@@ -13,7 +14,7 @@ public class Parking {
     public Parking() {
     }
 
-    public Parking(String name, String locationAddress, Double longitude, Double latitude, Integer hourlyPrice, Integer monthlyPrice, Integer yearlyPrice, Integer capacity, Integer numberOfFreeSpaces, String imageUrl, Set<WorkingHours> workingHours) {
+    public Parking(String name, String locationAddress, Double longitude, Double latitude, Integer hourlyPrice, Integer monthlyPrice, Integer yearlyPrice, Integer capacity, Integer numberOfFreeSpaces, String imageUrl, List<WorkingHours> workingHours) {
         this.name = name;
         this.locationAddress = locationAddress;
         this.longitude = longitude;
@@ -24,6 +25,20 @@ public class Parking {
         this.capacity = capacity;
         this.numberOfFreeSpaces = numberOfFreeSpaces;
         this.imageUrl = imageUrl;
+        this.workingHours = workingHours;
+    }
+
+    public Parking(ParkingDto parkingDto, List<WorkingHours> workingHours) {
+        this.name = parkingDto.getName();
+        this.locationAddress = parkingDto.getLocationAddress();
+        this.longitude = parkingDto.getLongitude();
+        this.latitude = parkingDto.getLatitude();
+        this.hourlyPrice = parkingDto.getHourlyPrice();
+        this.monthlyPrice = parkingDto.getMonthlyPrice();
+        this.yearlyPrice = parkingDto.getYearlyPrice();
+        this.capacity = parkingDto.getCapacity();
+        this.numberOfFreeSpaces = parkingDto.getNumberOfFreeSpaces();
+        this.imageUrl = parkingDto.getImageUrl();
         this.workingHours = workingHours;
     }
 
@@ -52,5 +67,5 @@ public class Parking {
     String imageUrl;
 
     @ManyToMany
-    Set<WorkingHours> workingHours;
+    List<WorkingHours> workingHours;
 }
