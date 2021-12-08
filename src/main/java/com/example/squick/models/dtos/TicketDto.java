@@ -1,5 +1,6 @@
 package com.example.squick.models.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,13 +12,11 @@ public class TicketDto {
 
     Long value;
 
-    @DateTimeFormat(pattern = "dd.mm.yyyy HH:MM:SS")
-    LocalDateTime entered;
+    String entered;
 
-    @DateTimeFormat(pattern = "dd.mm.yyyy HH:MM:SS")
-    LocalDateTime exited;
+    String exited;
 
-    public TicketDto(Long parkingId, Long value, LocalDateTime entered, LocalDateTime exited) {
+    public TicketDto(Long parkingId, Long value, String entered, String exited) {
         this.parkingId = parkingId;
         this.value = value;
         this.entered = entered;

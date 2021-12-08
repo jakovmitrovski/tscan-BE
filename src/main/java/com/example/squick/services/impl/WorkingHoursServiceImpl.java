@@ -50,27 +50,17 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
     }
 
     @Override
-    public Optional<Boolean> edit(WorkingHoursDto obj, Long id, Long parkingId) {
+    public Optional<Boolean> edit(WorkingHoursDto obj, Long id) {
 
         WorkingHours workingHours = workingHoursRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(Constants.workHoursNotFound));
 
         ValidateWorkingHours(obj);
 
-        //Check if there are working hours for that particular day that have an id different from the one provided
-        Parking parking = parkingRepository.findById(parkingId).orElseThrow(() -> new CustomNotFoundException(Constants.parkingNotFoundMessage));
-        List<WorkingHours> parkingWorkingHours = parking.getWorkingHours();
-
-        for (WorkingHours hours:parkingWorkingHours) {
-            if(hours.getDayOfWeek().equals(obj.getDayOfWeek())){
-                if(!hours.getId().equals(id))
-                    throw new BadRequestException(Constants.workingHoursAlreadyExist);
-            }
-        }
-
         try {
             workingHours.setDayOfWeek(obj.getDayOfWeek());
             workingHours.setTimeFrom(obj.getTimeFrom());
             workingHours.setTimeTo(obj.getTimeTo());
+            workingHoursRepository.save(workingHours);
             return Optional.of(true);
         } catch (Exception exception) {
             throw new BadRequestException(Constants.badRequest);
@@ -78,22 +68,13 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
     }
 
     @Override
-    public Optional<Boolean> createWorkingHoursForParking(WorkingHoursDto workingHours, Long parkingId) {
+    public Optional<Boolean> createWorkingHoursForParking(WorkingHoursDto workingHours) {
 
         ValidateWorkingHours(workingHours);
 
-        //Check if there are working hours for that day. If there are dont add new working hours
-        Parking parking = parkingRepository.findById(parkingId).orElseThrow(() -> new CustomNotFoundException(Constants.parkingNotFoundMessage));
-        List<WorkingHours> parkingWorkingHours = parking.getWorkingHours();
-
-        for (WorkingHours hours:parkingWorkingHours) {
-            if(hours.getDayOfWeek().equals(workingHours.getDayOfWeek())){
-                throw new BadRequestException(Constants.workingHoursAlreadyExist);
-            }
-        }
-
         try {
             workingHoursRepository.save(new WorkingHours(workingHours.getTimeFrom(), workingHours.getTimeTo(), workingHours.getDayOfWeek()));
+
             return Optional.of(true);
         } catch (Exception exception) {
             throw new BadRequestException(Constants.badRequest);

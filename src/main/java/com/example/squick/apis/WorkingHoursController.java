@@ -26,29 +26,27 @@ public class WorkingHoursController {
         return workingHoursService.findAllWorkingHoursForParking(parkingId);
     }
 
-    @PostMapping("/add/{parkingId}")
-    ResponseEntity<ResponseMessage> addNewWorkingHoursForParking(@PathVariable Long parkingId,
-                                                                 @RequestBody WorkingHoursDto dto) {
+    @PostMapping()
+    ResponseEntity<ResponseMessage> addNewWorkingHoursForParking(@RequestBody WorkingHoursDto dto) {
 
         ResponseMessage message = new ResponseMessage(Constants.workingHoursCreatedSuccessfully);
 
-        return workingHoursService.createWorkingHoursForParking(dto, parkingId).map(success -> ResponseEntity.ok(message))
+        return workingHoursService.createWorkingHoursForParking(dto).map(success -> ResponseEntity.ok(message))
                 .orElseThrow(() -> new BadRequestException(Constants.badRequest));
 
     }
 
-    @PutMapping("/edit/{parkingId}/{id}")
-    ResponseEntity<ResponseMessage> editWorkingHoursForParking(@PathVariable Long parkingId,
-                                                               @PathVariable Long id,
+    @PutMapping("/{id}")
+    ResponseEntity<ResponseMessage> editWorkingHoursForParking(@PathVariable Long id,
                                                                @RequestBody WorkingHoursDto dto) {
 
         ResponseMessage message = new ResponseMessage(Constants.editSuccessful);
 
-        return workingHoursService.edit(dto, id, parkingId).map(success -> ResponseEntity.ok(message))
+        return workingHoursService.edit(dto, id).map(success -> ResponseEntity.ok(message))
                 .orElseThrow(() -> new BadRequestException(Constants.badRequest));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<ResponseMessage> deleteWorkingHours(@PathVariable Long id) {
 
         ResponseMessage message = new ResponseMessage(Constants.workingHoursDeletedSuccessfully);
