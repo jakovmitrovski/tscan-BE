@@ -2,8 +2,6 @@ package com.example.squick.services;
 
 import com.example.squick.models.Transaction;
 import com.example.squick.models.dtos.TransactionDto;
-import com.example.squick.models.enumerations.PaymentStatus;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;

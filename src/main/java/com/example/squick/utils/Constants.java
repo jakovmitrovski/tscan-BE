@@ -27,6 +27,13 @@ public class Constants {
     public final static String invalidTicketHours = "Невалидни времиња за влез и излез!";
     public final static String ticketDeletedSuccessfully = "Билетот е успешно избришан!";
 
+    public final static String invalidWorkingHoursTimes = "Невалидни работни времиња!";
+    public final static String workingHoursAlreadyExist = "Веќе постои работно време за овој ден!";
+    public final static String workingHoursCreatedSuccessfully = "Успешно креирано работно времиње!";
+    public final static String workingHoursDeletedSuccessfully = "Успешно избришано работно време!";
+
+
+
 
 
 }

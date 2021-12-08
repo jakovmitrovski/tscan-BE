@@ -1,6 +1,5 @@
 package com.example.squick.models.dtos;
 
-import com.example.squick.models.WorkingHours;
 import lombok.Data;
 
 import java.util.List;

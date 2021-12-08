@@ -4,7 +4,6 @@ import com.example.squick.models.Ticket;
 import com.example.squick.models.enumerations.PaymentStatus;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 
 @Data
 public class TransactionDto {

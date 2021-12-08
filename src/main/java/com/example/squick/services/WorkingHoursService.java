@@ -8,13 +8,13 @@ import java.util.Optional;
 
 public interface WorkingHoursService {
 
-    List<WorkingHours> findAllByParkingId(Long parkingId);
+    List<WorkingHours> findAllWorkingHoursForParking(Long parkingId);
 
     Optional<WorkingHours> findById(Long id);
 
     Optional<Boolean> delete(Long id);
 
-    Optional<Boolean> edit(WorkingHours workingHours, Long id);
+    Optional<Boolean> edit(WorkingHoursDto workingHours, Long id, Long parkingId);
 
     Optional<Boolean> createWorkingHoursForParking(WorkingHoursDto workingHours, Long parkingId);
 }
