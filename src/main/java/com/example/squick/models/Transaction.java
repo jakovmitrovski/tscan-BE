@@ -20,7 +20,6 @@ public class Transaction {
         this.ticket = ticket;
         this.price = price;
         this.paymentStatus = paymentStatus;
-        this.createdAt=LocalDateTime.now();
     }
 
 

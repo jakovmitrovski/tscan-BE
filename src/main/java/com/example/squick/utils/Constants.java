@@ -27,4 +27,6 @@ public class Constants {
     public final static String invalidTicketHours = "Невалидни времиња за влез и излез!";
     public final static String ticketDeletedSuccessfully = "Билетот е успешно избришан!";
 
+
+
 }
