@@ -14,6 +14,8 @@ import com.example.squick.repositories.WorkingHoursRepository;
 import com.example.squick.services.ParkingService;
 import com.example.squick.utils.Constants;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,8 +38,9 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     @Override
-    public Page<ExploreParkingProjection> findAllExplore() {
-        return this.parkingRepository.findAllExplore();
+    public Page<ExploreParkingProjection> findAllExplore(Integer start, Integer items) {
+        Pageable pageable = PageRequest.of(start, items);
+        return this.parkingRepository.findAllExplore(pageable);
     }
 
     @Override
