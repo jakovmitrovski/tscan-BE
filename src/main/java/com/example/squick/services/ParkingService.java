@@ -13,7 +13,7 @@ public interface ParkingService {
 
     List<MapParkingProjection> findAllMap();
 
-    Page<ExploreParkingProjection> findAllExplore();
+    Page<ExploreParkingProjection> findAllExplore(Integer start, Integer items);
 
     Optional<ExploreParkingDetailsProjection> findByIdExplore(Long id);
 

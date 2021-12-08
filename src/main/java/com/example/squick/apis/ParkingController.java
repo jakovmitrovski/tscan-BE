@@ -26,8 +26,9 @@ public class ParkingController {
     }
 
     @GetMapping("/explore")
-    public Page<ExploreParkingProjection> findAllExplore() {
-        return this.parkingService.findAllExplore();
+    public Page<ExploreParkingProjection> findAllExplore(@RequestParam(required = false, defaultValue = "0") Integer start,
+                                                         @RequestParam(required = false, defaultValue = "10") Integer items) {
+        return this.parkingService.findAllExplore(start, items);
     }
 
     @GetMapping("/explore/{id}")
