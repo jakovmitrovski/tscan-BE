@@ -1,8 +1,13 @@
 package com.example.squick.apis;
 
+import com.example.squick.models.Ticket;
+import com.example.squick.models.dtos.TicketDto;
+import com.example.squick.models.exceptions.BadRequestException;
+import com.example.squick.models.responses.ResponseMessage;
 import com.example.squick.services.TicketService;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.squick.utils.Constants;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/tickets")
@@ -13,4 +18,42 @@ public class TicketController {
     public TicketController(TicketService ticketService) {
         this.ticketService = ticketService;
     }
+
+    @GetMapping("/{identifier}")
+    ResponseEntity<Ticket> getTicket(@PathVariable String identifier) {
+
+        return ticketService.findTicketById(identifier).map(ticket -> ResponseEntity.ok(ticket))
+                .orElseThrow(() -> new BadRequestException(Constants.badRequest));
+    }
+
+    @PostMapping("/add")
+    ResponseEntity<ResponseMessage> createNewTicket(@RequestBody TicketDto ticketDto) {
+
+        ResponseMessage message = new ResponseMessage(Constants.ticketCreatedSuccessfully);
+
+        return ticketService.create(ticketDto).map(success -> ResponseEntity.ok(message))
+                .orElseThrow(() -> new BadRequestException(Constants.badRequest));
+
+    }
+
+    @PutMapping("/edit/{id}")
+    ResponseEntity<ResponseMessage> editTicket(@RequestBody TicketDto ticketDto,
+                                               @PathVariable Long id) {
+
+        ResponseMessage message = new ResponseMessage(Constants.editSuccessful);
+
+        return ticketService.edit(ticketDto, id).map(success -> ResponseEntity.ok(message))
+                .orElseThrow(() -> new BadRequestException(Constants.badRequest));
+
+    }
+
+    @DeleteMapping("/delete/{id}")
+    ResponseEntity<ResponseMessage> deleteTicket(@PathVariable Long id) {
+
+        ResponseMessage message = new ResponseMessage(Constants.ticketDeletedSuccessfully);
+
+        return ticketService.delete(id).map(success -> ResponseEntity.ok(message))
+                .orElseThrow(() -> new BadRequestException(Constants.badRequest));
+    }
+
 }
