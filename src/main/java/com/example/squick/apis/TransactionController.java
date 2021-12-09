@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 
 @RestController
@@ -54,7 +53,7 @@ public class TransactionController {
     }
 
     @PostMapping()
-    ResponseEntity<ResponseMessage> createTransaction(@RequestBody TransactionDto dto) {
+    ResponseEntity<ResponseMessage> createTransaction(@Valid @RequestBody TransactionDto dto) {
 
         ResponseMessage message = new ResponseMessage(Constants.transactionCreatedSuccessfully);
 

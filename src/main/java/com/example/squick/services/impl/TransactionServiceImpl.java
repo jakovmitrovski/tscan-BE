@@ -38,7 +38,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Transaction> filterTransactionsForUser(String userId, int year, int month) {
+    public Page<Transaction> filterTransactionsForUser(String userId, int year, int month, int start, int items) {
 
         if (month < 0 || month > 12 || year < 2000)
             throw new BadRequestException(Constants.badRequest);
@@ -50,8 +50,9 @@ public class TransactionServiceImpl implements TransactionService {
                         : (month == 4 || month == 6 || month == 9 || month == 1) ? LocalDate.of(year, month, 30)
                         : (year % 4 == 0) ? LocalDate.of(year, month, 29) : LocalDate.of(year, month, 28);
 
+        Pageable pageable = PageRequest.of(start, items);
 
-        return transactionRepository.filterTransactions(userId, periodFrom.toString(), periodTo.toString());
+        return transactionRepository.filterTransactions(userId, periodFrom.toString(), periodTo.toString(), pageable);
     }
 
 

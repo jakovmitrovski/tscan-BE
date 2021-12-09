@@ -20,7 +20,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     //Filter all successful transactions by month and year
     //TODO: Should return Page not List
     @Query(value = "select * from transactions t where t.user_id=:userId and t.payment_status='SUCCESSFUL' and t.created_at >= CAST(:periodFrom as date ) and t.created_at <= CAST(:periodTo as date );", nativeQuery = true)
-    List<Transaction> filterTransactions(String userId, String periodFrom, String periodTo);
+    Page<Transaction> filterTransactions(String userId, String periodFrom, String periodTo, Pageable pageable);
 
     //Filter by UserId and Status (may not be needed)
     List<Transaction> findByUserIdAndPaymentStatus(String userId, PaymentStatus status);
