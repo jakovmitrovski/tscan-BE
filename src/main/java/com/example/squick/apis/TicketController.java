@@ -9,6 +9,8 @@ import com.example.squick.utils.Constants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/tickets")
 public class TicketController {
@@ -27,7 +29,7 @@ public class TicketController {
     }
 
     @PostMapping("/add")
-    ResponseEntity<ResponseMessage> createNewTicket(@RequestBody TicketDto ticketDto) {
+    ResponseEntity<ResponseMessage> createNewTicket(@Valid @RequestBody TicketDto ticketDto) {
 
         ResponseMessage message = new ResponseMessage(Constants.ticketCreatedSuccessfully);
 
@@ -37,7 +39,7 @@ public class TicketController {
     }
 
     @PutMapping("/edit/{id}")
-    ResponseEntity<ResponseMessage> editTicket(@RequestBody TicketDto ticketDto,
+    ResponseEntity<ResponseMessage> editTicket(@Valid @RequestBody TicketDto ticketDto,
                                                @PathVariable Long id) {
 
         ResponseMessage message = new ResponseMessage(Constants.editSuccessful);

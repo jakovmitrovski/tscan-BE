@@ -10,6 +10,9 @@ import com.example.squick.repositories.TicketRepository;
 import com.example.squick.repositories.TransactionRepository;
 import com.example.squick.services.TransactionService;
 import com.example.squick.utils.Constants;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,11 +36,13 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Transaction> filterTransactionsForUser(String userId, int year, int month) {
+    public Page<Transaction> filterTransactionsForUser(String userId, int year, int month, int start, int items) {
         if (month < 1 || month > 12 && year < 2000)
             throw new BadRequestException(Constants.badRequest);
 
-        return transactionRepository.filterTransactions(userId, year, month);
+        Pageable pageable = PageRequest.of(start, items);
+
+        return transactionRepository.filterTransactions(userId, year, month, pageable);
     }
 
 

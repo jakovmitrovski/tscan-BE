@@ -7,8 +7,6 @@ import com.example.squick.models.exceptions.BadRequestException;
 import com.example.squick.models.exceptions.CustomItemAlreadyExistsException;
 import com.example.squick.models.exceptions.CustomNotFoundException;
 import com.example.squick.models.projections.ExploreParkingDetailsProjection;
-import com.example.squick.models.projections.ExploreParkingProjection;
-import com.example.squick.models.projections.MapParkingProjection;
 import com.example.squick.repositories.ParkingRepository;
 import com.example.squick.repositories.WorkingHoursRepository;
 import com.example.squick.services.ParkingService;
@@ -16,10 +14,15 @@ import com.example.squick.utils.Constants;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ParkingServiceImpl implements ParkingService {
@@ -33,14 +36,31 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     @Override
-    public List<MapParkingProjection> findAllMap() {
+    public List<Parking> findAllMap() {
         return this.parkingRepository.findAllMap();
     }
 
     @Override
-    public Page<ExploreParkingProjection> findAllExplore(Integer start, Integer items) {
+    public Page<Parking> findAllExplore(Integer start, Integer items, Integer priceFrom, Integer priceTo, boolean openNow, String keyword) {
+
+        LocalDateTime today = LocalDateTime.now();
+
+        DayOfWeek day = today.getDayOfWeek();
+        LocalTime time = today.toLocalTime();
+
         Pageable pageable = PageRequest.of(start, items);
-        return this.parkingRepository.findAllExplore(pageable);
+
+
+        try {
+            if (!keyword.equals("%")) keyword = "%" + keyword + "%";
+        } catch (Exception ex) {
+            throw new BadRequestException(Constants.badRequest);
+        }
+        if (!openNow) {
+            return this.parkingRepository.findAllExplore(priceFrom, priceTo, keyword, pageable);
+        }else {
+            return this.parkingRepository.findAllExploreOpenNow(priceFrom, priceTo, keyword, day.toString(), time, pageable);
+        }
     }
 
     @Override
@@ -112,5 +132,10 @@ public class ParkingServiceImpl implements ParkingService {
             throw new BadRequestException(Constants.badRequest);
         }
         return Optional.of(true);
+    }
+
+    @Override
+    public Page<Parking> findAll(Integer start, Integer items) {
+        return this.parkingRepository.findAll(PageRequest.of(start, items));
     }
 }

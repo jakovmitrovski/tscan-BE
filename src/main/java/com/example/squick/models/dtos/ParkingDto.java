@@ -2,31 +2,43 @@ package com.example.squick.models.dtos;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
 public class ParkingDto {
 
+    @NotNull(message = "Името е задолжително!")
     String name;
 
+    @NotNull(message = "Адресата е задолжителна!")
     String locationAddress;
 
+    @NotNull(message = "Географската ширина е задолжителна!")
     Double longitude;
 
+    @NotNull(message = "Географската должина е задолжителна!")
     Double latitude;
 
+    @NotNull(message = "Часовната цена е задолжителна!")
     Integer hourlyPrice;
 
+    @NotNull(message = "Месечната цена е задолжителна!")
     Integer monthlyPrice;
 
+    @NotNull(message = "Годишната цена е задолжителна!")
     Integer yearlyPrice;
 
+    @NotNull(message = "Капацитетот на паркингот е задолжителен!")
     Integer capacity;
 
+    @NotNull(message = "Бројот на слободни места е задолжителен!")
     Integer numberOfFreeSpaces;
 
     String imageUrl;
 
+    @NotEmpty(message = "Работните часови се задолжителни!")
     List<Long> workingHoursIds;
 
     public ParkingDto(String name, String locationAddress, Double longitude, Double latitude, Integer hourlyPrice, Integer monthlyPrice, Integer yearlyPrice, Integer capacity, Integer numberOfFreeSpaces, String imageUrl, List<Long> workingHours) {
