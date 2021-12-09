@@ -15,6 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,13 +38,20 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Page<Transaction> filterTransactionsForUser(String userId, int year, int month, int start, int items) {
-        if (month < 1 || month > 12 && year < 2000)
+    public List<Transaction> filterTransactionsForUser(String userId, int year, int month) {
+
+        if (month < 0 || month > 12 || year < 2000)
             throw new BadRequestException(Constants.badRequest);
 
-        Pageable pageable = PageRequest.of(start, items);
+        LocalDate periodFrom = LocalDate.of(year, month, 1);
+        LocalDate periodTo =
+                (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+                        ? LocalDate.of(year, month, 31)
+                        : (month == 4 || month == 6 || month == 9 || month == 1) ? LocalDate.of(year, month, 30)
+                        : (year % 4 == 0) ? LocalDate.of(year, month, 29) : LocalDate.of(year, month, 28);
 
-        return transactionRepository.filterTransactions(userId, year, month, pageable);
+
+        return transactionRepository.filterTransactions(userId, periodFrom.toString(), periodTo.toString());
     }
 
 
@@ -69,7 +78,7 @@ public class TransactionServiceImpl implements TransactionService {
         Ticket ticket = ticketRepository.findById(dto.getTicketId()).orElseThrow(() -> new CustomNotFoundException(Constants.ticketDoesNotExist));
 
         if (transactions.size() > 0)
-            throw new CustomNotFoundException(Constants.transactionAlreadyPaid);
+            throw new BadRequestException(Constants.transactionAlreadyPaid);
         else {
             try {
                 if (dto.getPrice() < 0)
@@ -105,6 +114,7 @@ public class TransactionServiceImpl implements TransactionService {
             transaction.setPaymentStatus(dto.getPaymentStatus());
             transaction.setTicket(ticket);
             transaction.setPrice(dto.getPrice());
+            transactionRepository.save(transaction);
             return Optional.of(true);
         } catch (Exception exception) {
             throw new BadRequestException(Constants.badRequest);

@@ -1,5 +1,6 @@
 package com.example.squick.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -30,9 +31,9 @@ public class Ticket {
 
     Long value;
 
-    @DateTimeFormat(pattern = "dd.mm.yyyy HH:MM:SS")
+    @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss")
     LocalDateTime entered;
 
-    @DateTimeFormat(pattern = "dd.mm.yyyy HH:MM:SS")
+    @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss")
     LocalDateTime exited;
 }

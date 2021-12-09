@@ -10,8 +10,11 @@ import com.example.squick.repositories.ParkingRepository;
 import com.example.squick.repositories.TicketRepository;
 import com.example.squick.services.TicketService;
 import com.example.squick.utils.Constants;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.Random;
 
@@ -20,6 +23,8 @@ public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository ticketRepository;
     private final ParkingRepository parkingRepository;
+
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
     public TicketServiceImpl(TicketRepository ticketRepository,
                              ParkingRepository parkingRepository) {
@@ -40,7 +45,7 @@ public class TicketServiceImpl implements TicketService {
             throw new BadRequestException(Constants.invalidTicketIdentifier);
         }
 
-        Long parkingId = Long.parseLong(identifier.substring(Constants.ticketIdentifierParkingIdLength));
+        Long parkingId = Long.parseLong(identifier.substring(0,Constants.ticketIdentifierParkingIdLength));
         Long ticketValue = Long.parseLong(identifier.substring(Constants.ticketIdentifierParkingIdLength, Constants.ticketIdentifierLength));
 
         parkingRepository.findById(parkingId).orElseThrow(() -> new CustomNotFoundException(Constants.parkingNotFoundMessage));
@@ -75,8 +80,9 @@ public class TicketServiceImpl implements TicketService {
         try {
             ticket.setValue(dto.getValue());
             ticket.setParking(parking);
-            ticket.setEntered(dto.getEntered());
-            ticket.setExited(dto.getExited());
+            ticket.setEntered(LocalDateTime.parse(dto.getEntered(), formatter));
+            ticket.setExited(LocalDateTime.parse(dto.getExited(), formatter));
+            ticketRepository.save(ticket);
             return Optional.of(true);
         } catch (Exception exception) {
             throw new BadRequestException(Constants.badRequest);
@@ -95,7 +101,7 @@ public class TicketServiceImpl implements TicketService {
             ticketValue = generator.nextInt(999999);
 
         try {
-            ticketRepository.save(new Ticket(parking, ticketValue, ticketDto.getEntered(), ticketDto.getExited()));
+            ticketRepository.save(new Ticket(parking, ticketValue, LocalDateTime.parse(ticketDto.getEntered(), formatter), LocalDateTime.parse(ticketDto.getExited(), formatter)));
             return Optional.of(true);
         } catch (Exception exception) {
             throw new BadRequestException(Constants.badRequest);
@@ -110,7 +116,7 @@ public class TicketServiceImpl implements TicketService {
         if (ticketRepository.findByParkingIdAndValue(ticketDto.getParkingId(), ticketDto.getValue()).isPresent())
             throw new CustomItemAlreadyExistsException(Constants.ticketAlreadyExists);
 
-        if (ticketDto.getExited().isBefore(ticketDto.getEntered()))
+        if (LocalDateTime.parse(ticketDto.getExited(), formatter).isBefore(LocalDateTime.parse(ticketDto.getEntered(), formatter)))
             throw new BadRequestException(Constants.invalidTicketHours);
 
         return parking;

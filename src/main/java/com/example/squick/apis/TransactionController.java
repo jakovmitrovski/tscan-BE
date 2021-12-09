@@ -33,7 +33,7 @@ public class TransactionController {
         return transactionService.filterTransactionsForUser(userId, year, month, start, items);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<ResponseMessage> deleteTransaction(@PathVariable Long id) {
 
         ResponseMessage message = new ResponseMessage(Constants.transactionDeletedSuccessfully);
@@ -43,7 +43,7 @@ public class TransactionController {
 
     }
 
-    @PutMapping("/edit/{id}")
+    @PutMapping("/{id}")
     ResponseEntity<ResponseMessage> editTransaction(@PathVariable Long id,
                                                     @Valid @RequestBody TransactionDto dto) {
 
@@ -53,8 +53,8 @@ public class TransactionController {
                 .orElseThrow(() -> new CustomNotFoundException(Constants.transactionNotFoundMessage));
     }
 
-    @PostMapping("/create")
-    ResponseEntity<ResponseMessage> createTransaction(@Valid @RequestBody TransactionDto dto) {
+    @PostMapping()
+    ResponseEntity<ResponseMessage> createTransaction(@RequestBody TransactionDto dto) {
 
         ResponseMessage message = new ResponseMessage(Constants.transactionCreatedSuccessfully);
 

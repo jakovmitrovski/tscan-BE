@@ -24,9 +24,9 @@ public class WorkingHours {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @DateTimeFormat(pattern = "HH:MM")
+    @DateTimeFormat(pattern = "hh:mm")
     LocalTime timeFrom;
-    @DateTimeFormat(pattern = "HH:MM")
+    @DateTimeFormat(pattern = "hh:mm")
     LocalTime timeTo;
 
     @Enumerated(value = EnumType.STRING)

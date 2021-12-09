@@ -14,7 +14,7 @@ public interface WorkingHoursService {
 
     Optional<Boolean> delete(Long id);
 
-    Optional<Boolean> edit(WorkingHoursDto workingHours, Long id, Long parkingId);
+    Optional<Boolean> edit(WorkingHoursDto workingHours, Long id);
 
-    Optional<Boolean> createWorkingHoursForParking(WorkingHoursDto workingHours, Long parkingId);
+    Optional<Boolean> createWorkingHoursForParking(WorkingHoursDto workingHours);
 }

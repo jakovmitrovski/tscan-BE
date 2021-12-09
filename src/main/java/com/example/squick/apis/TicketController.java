@@ -28,8 +28,8 @@ public class TicketController {
                 .orElseThrow(() -> new BadRequestException(Constants.badRequest));
     }
 
-    @PostMapping("/add")
-    ResponseEntity<ResponseMessage> createNewTicket(@Valid @RequestBody TicketDto ticketDto) {
+    @PostMapping("")
+    ResponseEntity<ResponseMessage> createNewTicket(@RequestBody TicketDto ticketDto) {
 
         ResponseMessage message = new ResponseMessage(Constants.ticketCreatedSuccessfully);
 
@@ -38,8 +38,8 @@ public class TicketController {
 
     }
 
-    @PutMapping("/edit/{id}")
-    ResponseEntity<ResponseMessage> editTicket(@Valid @RequestBody TicketDto ticketDto,
+    @PutMapping("/{id}")
+    ResponseEntity<ResponseMessage> editTicket(@RequestBody TicketDto ticketDto,
                                                @PathVariable Long id) {
 
         ResponseMessage message = new ResponseMessage(Constants.editSuccessful);
@@ -49,7 +49,7 @@ public class TicketController {
 
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<ResponseMessage> deleteTicket(@PathVariable Long id) {
 
         ResponseMessage message = new ResponseMessage(Constants.ticketDeletedSuccessfully);
