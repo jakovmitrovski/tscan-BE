@@ -14,5 +14,4 @@ public interface TicketService {
     Optional<Boolean> edit(TicketDto ticket, Long id);
 
     Optional<Boolean> create(TicketDto ticketDto);
-
 }

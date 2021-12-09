@@ -2,8 +2,6 @@ package com.example.squick.models;
 
 import com.example.squick.models.dtos.ParkingDto;
 import lombok.Data;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;

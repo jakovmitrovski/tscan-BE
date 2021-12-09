@@ -21,8 +21,4 @@ public interface ParkingService {
     Optional<Boolean> edit(ParkingDto parkingDto, Long id);
 
     Optional<Boolean> delete(Long id);
-
-    Page<Parking> findAll(Integer start, Integer items);
-
-
 }

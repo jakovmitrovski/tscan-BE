@@ -2,9 +2,9 @@ package com.example.squick.utils;
 
 public class Constants {
 
-    public final static int ticketIdentifierLength=14;
-    public final static int ticketIdentifierParkingIdLength=8;
-    public final static int ticketIdentifierValueLength=6;
+    public final static int ticketIdentifierLength = 14;
+    public final static int ticketIdentifierParkingIdLength = 8;
+    public final static int ticketIdentifierValueLength = 6;
 
     public final static String parkingNotFoundMessage = "Паркингот не е пронајден!";
     public final static String parkingCreatedSuccessfully = "Успешно зачуван паркинг!";
@@ -31,9 +31,6 @@ public class Constants {
     public final static String workingHoursAlreadyExist = "Веќе постои работно време за овој ден!";
     public final static String workingHoursCreatedSuccessfully = "Успешно креирано работно времиње!";
     public final static String workingHoursDeletedSuccessfully = "Успешно избришано работно време!";
-
-
-
 
 
 }

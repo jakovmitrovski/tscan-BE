@@ -10,7 +10,6 @@ import com.example.squick.repositories.ParkingRepository;
 import com.example.squick.repositories.TicketRepository;
 import com.example.squick.services.TicketService;
 import com.example.squick.utils.Constants;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -45,7 +44,7 @@ public class TicketServiceImpl implements TicketService {
             throw new BadRequestException(Constants.invalidTicketIdentifier);
         }
 
-        Long parkingId = Long.parseLong(identifier.substring(0,Constants.ticketIdentifierParkingIdLength));
+        Long parkingId = Long.parseLong(identifier.substring(0, Constants.ticketIdentifierParkingIdLength));
         Long ticketValue = Long.parseLong(identifier.substring(Constants.ticketIdentifierParkingIdLength, Constants.ticketIdentifierLength));
 
         parkingRepository.findById(parkingId).orElseThrow(() -> new CustomNotFoundException(Constants.parkingNotFoundMessage));

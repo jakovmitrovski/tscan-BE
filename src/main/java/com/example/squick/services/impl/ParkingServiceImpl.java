@@ -14,15 +14,12 @@ import com.example.squick.utils.Constants;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ParkingServiceImpl implements ParkingService {
@@ -58,7 +55,7 @@ public class ParkingServiceImpl implements ParkingService {
         }
         if (!openNow) {
             return this.parkingRepository.findAllExplore(priceFrom, priceTo, keyword, pageable);
-        }else {
+        } else {
             return this.parkingRepository.findAllExploreOpenNow(priceFrom, priceTo, keyword, day.toString(), time, pageable);
         }
     }
@@ -132,10 +129,5 @@ public class ParkingServiceImpl implements ParkingService {
             throw new BadRequestException(Constants.badRequest);
         }
         return Optional.of(true);
-    }
-
-    @Override
-    public Page<Parking> findAll(Integer start, Integer items) {
-        return this.parkingRepository.findAll(PageRequest.of(start, items));
     }
 }
