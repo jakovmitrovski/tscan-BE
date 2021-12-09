@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -24,10 +25,12 @@ public class TransactionController {
     }
 
     @GetMapping("/{userId}")
-    List<Transaction> findAllTransactions(@PathVariable String userId,
+    Page<Transaction> findAllTransactions(@PathVariable String userId,
                                           @RequestParam int year,
-                                          @RequestParam int month) {
-        return transactionService.filterTransactionsForUser(userId, year, month);
+                                          @RequestParam int month,
+                                          @RequestParam(required = false, defaultValue = "0") Integer start,
+                                          @RequestParam(required = false, defaultValue = "10") Integer items) {
+        return transactionService.filterTransactionsForUser(userId, year, month, start, items);
     }
 
     @DeleteMapping("/{id}")
@@ -42,7 +45,7 @@ public class TransactionController {
 
     @PutMapping("/{id}")
     ResponseEntity<ResponseMessage> editTransaction(@PathVariable Long id,
-                                                    @RequestBody TransactionDto dto) {
+                                                    @Valid @RequestBody TransactionDto dto) {
 
         ResponseMessage message = new ResponseMessage(Constants.editSuccessful);
 

@@ -9,6 +9,8 @@ import com.example.squick.utils.Constants;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/tickets")
 public class TicketController {
