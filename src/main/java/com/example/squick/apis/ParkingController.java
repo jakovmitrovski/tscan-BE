@@ -7,7 +7,6 @@ import com.example.squick.models.projections.ExploreParkingDetailsProjection;
 import com.example.squick.models.responses.ResponseMessage;
 import com.example.squick.services.ParkingService;
 import com.example.squick.utils.Constants;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,24 +24,18 @@ public class ParkingController {
     }
 
     @GetMapping("/explore")
-    public Page<Parking> findAllExplore(@RequestParam(required = false, defaultValue = "0") Integer start,
-                                        @RequestParam(required = false, defaultValue = "10") Integer items,
-                                        @RequestParam(required = false, defaultValue = "0") Integer priceFrom,
+    public List<Parking> findAllExplore(@RequestParam(required = false, defaultValue = "0") Integer priceFrom,
                                         @RequestParam(required = false, defaultValue = "1000000") Integer priceTo,
                                         @RequestParam(required = false, defaultValue = "false") boolean openNow,
+                                        @RequestParam(required = false, defaultValue = "false") boolean freeSpaces,
                                         @RequestParam(required = false, defaultValue = "%") String keyword) {
-        return this.parkingService.findAllExplore(start, items, priceFrom, priceTo, openNow, keyword);
+        return this.parkingService.findAllExplore(priceFrom, priceTo, openNow, freeSpaces, keyword);
     }
 
     @GetMapping("/explore/{id}")
     public ResponseEntity<ExploreParkingDetailsProjection> findParkingByIdExplore(@PathVariable Long id) {
         return this.parkingService.findByIdExplore(id).map(parking -> ResponseEntity.ok().body(parking))
                 .orElseThrow(() -> new CustomNotFoundException(Constants.parkingNotFoundMessage));
-    }
-
-    @GetMapping("/map")
-    public List<Parking> findAllMap() {
-        return this.parkingService.findAllMap();
     }
 
     @PostMapping

@@ -3,16 +3,13 @@ package com.example.squick.services;
 import com.example.squick.models.Parking;
 import com.example.squick.models.dtos.ParkingDto;
 import com.example.squick.models.projections.ExploreParkingDetailsProjection;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ParkingService {
 
-    List<Parking> findAllMap();
-
-    Page<Parking> findAllExplore(Integer start, Integer items, Integer priceFrom, Integer priceTo, boolean openNow, String keyword);
+    List<Parking> findAllExplore(Integer priceFrom, Integer priceTo, boolean openNow, boolean freeSpaces, String keyword);
 
     Optional<ExploreParkingDetailsProjection> findByIdExplore(Long id);
 

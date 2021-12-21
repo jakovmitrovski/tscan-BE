@@ -11,9 +11,6 @@ import com.example.squick.repositories.ParkingRepository;
 import com.example.squick.repositories.WorkingHoursRepository;
 import com.example.squick.services.ParkingService;
 import com.example.squick.utils.Constants;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -33,20 +30,12 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     @Override
-    public List<Parking> findAllMap() {
-        return this.parkingRepository.findAllMap();
-    }
-
-    @Override
-    public Page<Parking> findAllExplore(Integer start, Integer items, Integer priceFrom, Integer priceTo, boolean openNow, String keyword) {
+    public List<Parking> findAllExplore(Integer priceFrom, Integer priceTo, boolean openNow, boolean freeSpaces, String keyword) {
 
         LocalDateTime today = LocalDateTime.now();
 
         DayOfWeek day = today.getDayOfWeek();
         LocalTime time = today.toLocalTime();
-
-        Pageable pageable = PageRequest.of(start, items);
-
 
         try {
             if (!keyword.equals("%")) keyword = "%" + keyword + "%";
@@ -54,9 +43,9 @@ public class ParkingServiceImpl implements ParkingService {
             throw new BadRequestException(Constants.badRequest);
         }
         if (!openNow) {
-            return this.parkingRepository.findAllExplore(priceFrom, priceTo, keyword, pageable);
+            return this.parkingRepository.findAllExplore(priceFrom, priceTo, freeSpaces, keyword);
         } else {
-            return this.parkingRepository.findAllExploreOpenNow(priceFrom, priceTo, keyword, day.toString(), time, pageable);
+            return this.parkingRepository.findAllExploreOpenNow(priceFrom, priceTo, freeSpaces, keyword, day.toString(), time);
         }
     }
 
