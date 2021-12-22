@@ -10,9 +10,9 @@ public class TicketDto {
     @NotNull(message = "Паркингот е задолжителен!")
     Long parkingId;
 
-    @NotNull(message = "Вредноста е задолжителна!")
     Long value;
 
+    @NotNull(message = "Вредноста е задолжителна!")
     String entered;
 
     String exited;

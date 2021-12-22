@@ -3,6 +3,7 @@ package com.example.squick.services.impl;
 import com.example.squick.models.Parking;
 import com.example.squick.models.Ticket;
 import com.example.squick.models.dtos.TicketDto;
+import com.example.squick.models.dtos.TicketResponseDto;
 import com.example.squick.models.exceptions.BadRequestException;
 import com.example.squick.models.exceptions.CustomItemAlreadyExistsException;
 import com.example.squick.models.exceptions.CustomNotFoundException;
@@ -12,7 +13,10 @@ import com.example.squick.services.TicketService;
 import com.example.squick.utils.Constants;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.Random;
@@ -31,9 +35,8 @@ public class TicketServiceImpl implements TicketService {
         this.parkingRepository = parkingRepository;
     }
 
-    //TODO: Change return type
     @Override
-    public Optional<Ticket> findTicketById(String identifier) {
+    public Optional<TicketResponseDto> scanTicket(String identifier) {
 
         if (identifier.length() != Constants.ticketIdentifierLength)
             throw new BadRequestException(Constants.invalidTicketIdentifier);
@@ -47,10 +50,17 @@ public class TicketServiceImpl implements TicketService {
         Long parkingId = Long.parseLong(identifier.substring(0, Constants.ticketIdentifierParkingIdLength));
         Long ticketValue = Long.parseLong(identifier.substring(Constants.ticketIdentifierParkingIdLength, Constants.ticketIdentifierLength));
 
-        parkingRepository.findById(parkingId).orElseThrow(() -> new CustomNotFoundException(Constants.parkingNotFoundMessage));
+        Parking parking = parkingRepository.findById(parkingId).orElseThrow(() -> new CustomNotFoundException(Constants.parkingNotFoundMessage));
 
         try {
-            return ticketRepository.findByIdAndValue(parkingId, ticketValue);
+            Ticket ticket = ticketRepository.findByParking_IdAndValue(parkingId, ticketValue).get();
+            ticket.setExited(LocalDateTime.now());
+            ticket = ticketRepository.save(ticket);
+
+            TicketResponseDto response = new TicketResponseDto(ticket.getParking(), ticket.getEntered().format(formatter), ticket.getExited().format(formatter));
+            double hoursParked = Math.ceil((Duration.between(ticket.getEntered(), ticket.getExited()).getSeconds()) / 3600.0);
+            response.setPrice((long) (hoursParked * parking.getHourlyPrice()));
+            return Optional.of(response);
         } catch (Exception exception) {
             throw new CustomNotFoundException(Constants.ticketDoesNotExist);
         }
@@ -71,37 +81,27 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public Optional<Boolean> edit(TicketDto dto, Long id) {
-
-        Ticket ticket = ticketRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(Constants.ticketDoesNotExist));
-        Parking parking = ValidateTicket(dto);
-
-        try {
-            ticket.setValue(dto.getValue());
-            ticket.setParking(parking);
-            ticket.setEntered(LocalDateTime.parse(dto.getEntered(), formatter));
-            ticket.setExited(LocalDateTime.parse(dto.getExited(), formatter));
-            ticketRepository.save(ticket);
-            return Optional.of(true);
-        } catch (Exception exception) {
-            throw new BadRequestException(Constants.badRequest);
-        }
-    }
-
-    @Override
-    public Optional<Boolean> create(TicketDto ticketDto) {
+    public Optional<TicketDto> create(TicketDto ticketDto) {
 
         Parking parking = ValidateTicket(ticketDto);
+
+        LocalDateTime dateTimeEntered = LocalDateTime.parse(ticketDto.getEntered(), formatter);
+        LocalDateTime dateTimeExited = null;
+
+        if (ticketDto.getExited() != null && !ticketDto.getExited().isEmpty())
+            dateTimeExited = LocalDateTime.parse(ticketDto.getExited(), formatter);
 
         Random generator = new Random();
         long ticketValue = generator.nextInt(999999);
 
-        while (ticketRepository.findByParkingIdAndValue(ticketDto.getParkingId(), ticketValue).isPresent())
+        while (ticketRepository.findByParking_IdAndValue(ticketDto.getParkingId(), ticketValue).isPresent())
             ticketValue = generator.nextInt(999999);
 
         try {
-            ticketRepository.save(new Ticket(parking, ticketValue, LocalDateTime.parse(ticketDto.getEntered(), formatter), LocalDateTime.parse(ticketDto.getExited(), formatter)));
-            return Optional.of(true);
+            ticketRepository.save(new Ticket(parking, ticketValue, dateTimeEntered, dateTimeExited));
+
+            ticketDto.setValue(ticketValue);
+            return Optional.of(ticketDto);
         } catch (Exception exception) {
             throw new BadRequestException(Constants.badRequest);
         }
@@ -112,10 +112,10 @@ public class TicketServiceImpl implements TicketService {
 
         Parking parking = parkingRepository.findById(ticketDto.getParkingId()).orElseThrow(() -> new CustomNotFoundException(Constants.parkingNotFoundMessage));
 
-        if (ticketRepository.findByParkingIdAndValue(ticketDto.getParkingId(), ticketDto.getValue()).isPresent())
+        if (ticketDto.getValue() != null && ticketRepository.findByParking_IdAndValue(ticketDto.getParkingId(), ticketDto.getValue()).isPresent())
             throw new CustomItemAlreadyExistsException(Constants.ticketAlreadyExists);
 
-        if (LocalDateTime.parse(ticketDto.getExited(), formatter).isBefore(LocalDateTime.parse(ticketDto.getEntered(), formatter)))
+        if (ticketDto.getExited() != null && !ticketDto.getExited().isEmpty() && LocalDateTime.parse(ticketDto.getExited(), formatter).isBefore(LocalDateTime.parse(ticketDto.getEntered(), formatter)))
             throw new BadRequestException(Constants.invalidTicketHours);
 
         return parking;

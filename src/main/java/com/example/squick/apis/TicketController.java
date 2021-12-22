@@ -1,7 +1,7 @@
 package com.example.squick.apis;
 
-import com.example.squick.models.Ticket;
 import com.example.squick.models.dtos.TicketDto;
+import com.example.squick.models.dtos.TicketResponseDto;
 import com.example.squick.models.exceptions.BadRequestException;
 import com.example.squick.models.responses.ResponseMessage;
 import com.example.squick.services.TicketService;
@@ -22,29 +22,16 @@ public class TicketController {
     }
 
     @GetMapping("/{identifier}")
-    ResponseEntity<Ticket> getTicket(@PathVariable String identifier) {
+    ResponseEntity<TicketResponseDto> getTicket(@PathVariable String identifier) {
 
-        return ticketService.findTicketById(identifier).map(ticket -> ResponseEntity.ok(ticket))
+        return ticketService.scanTicket(identifier).map(ticket -> ResponseEntity.ok(ticket))
                 .orElseThrow(() -> new BadRequestException(Constants.badRequest));
     }
 
     @PostMapping
-    ResponseEntity<ResponseMessage> createNewTicket(@Valid @RequestBody TicketDto ticketDto) {
+    ResponseEntity<TicketDto> createNewTicket(@Valid @RequestBody TicketDto ticketDto) {
 
-        ResponseMessage message = new ResponseMessage(Constants.ticketCreatedSuccessfully);
-
-        return ticketService.create(ticketDto).map(success -> ResponseEntity.ok(message))
-                .orElseThrow(() -> new BadRequestException(Constants.badRequest));
-
-    }
-
-    @PutMapping("/{id}")
-    ResponseEntity<ResponseMessage> editTicket(@Valid @RequestBody TicketDto ticketDto,
-                                               @PathVariable Long id) {
-
-        ResponseMessage message = new ResponseMessage(Constants.editSuccessful);
-
-        return ticketService.edit(ticketDto, id).map(success -> ResponseEntity.ok(message))
+        return ticketService.create(ticketDto).map(success -> ResponseEntity.ok(success))
                 .orElseThrow(() -> new BadRequestException(Constants.badRequest));
 
     }

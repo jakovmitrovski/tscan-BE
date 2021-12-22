@@ -8,8 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
-
-    Optional<Ticket> findByIdAndValue(Long id, Long value);
-
-    Optional<Ticket> findByParkingIdAndValue(Long parkingId, Long value);
+    Optional<Ticket> findByParking_IdAndValue(Long parkingId, Long value);
 }
