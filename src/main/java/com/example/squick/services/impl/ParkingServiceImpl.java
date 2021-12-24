@@ -30,6 +30,11 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     @Override
+    public List<Parking> findAll() {
+        return parkingRepository.findAll();
+    }
+
+    @Override
     public List<Parking> findAllExplore(Integer priceFrom, Integer priceTo, boolean openNow, boolean freeSpaces, String keyword) {
 
         LocalDateTime today = LocalDateTime.now();

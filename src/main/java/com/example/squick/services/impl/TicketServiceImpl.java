@@ -2,6 +2,7 @@ package com.example.squick.services.impl;
 
 import com.example.squick.models.Parking;
 import com.example.squick.models.Ticket;
+import com.example.squick.models.WorkingHours;
 import com.example.squick.models.dtos.TicketDto;
 import com.example.squick.models.dtos.TicketResponseDto;
 import com.example.squick.models.exceptions.BadRequestException;
@@ -15,9 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
 
@@ -97,6 +98,10 @@ public class TicketServiceImpl implements TicketService {
         while (ticketRepository.findByParking_IdAndValue(ticketDto.getParkingId(), ticketValue).isPresent())
             ticketValue = generator.nextInt(999999);
 
+        List<Ticket> currentlyOccupied = ticketRepository.findAllByParking_IdAndExitedEquals(parking.getId(), null);
+        if (currentlyOccupied.size() >= parking.getCapacity())
+            throw new BadRequestException("Parking is currently full!");
+
         try {
             ticketRepository.save(new Ticket(parking, ticketValue, dateTimeEntered, dateTimeExited));
 
@@ -110,10 +115,20 @@ public class TicketServiceImpl implements TicketService {
     //TODO: Refactor?
     private Parking ValidateTicket(TicketDto ticketDto) {
 
+        LocalDateTime entered = LocalDateTime.parse(ticketDto.getEntered(), formatter);
+
         Parking parking = parkingRepository.findById(ticketDto.getParkingId()).orElseThrow(() -> new CustomNotFoundException(Constants.parkingNotFoundMessage));
 
         if (ticketDto.getValue() != null && ticketRepository.findByParking_IdAndValue(ticketDto.getParkingId(), ticketDto.getValue()).isPresent())
             throw new CustomItemAlreadyExistsException(Constants.ticketAlreadyExists);
+
+        List<WorkingHours> workingHoursList = parking.getWorkingHours();
+        WorkingHours workingHours = workingHoursList.stream().filter(x -> x.getDayOfWeek().name().equals(entered.getDayOfWeek().name().toUpperCase(Locale.ROOT))).findFirst()
+                .orElseThrow(() -> new CustomNotFoundException(Constants.workHoursNotFound));
+
+        if (entered.isBefore(LocalDateTime.of(LocalDateTime.now().toLocalDate(), workingHours.getTimeFrom()))
+                || entered.isAfter(LocalDateTime.of(LocalDateTime.now().toLocalDate(), workingHours.getTimeTo())))
+            throw new BadRequestException(Constants.badRequest);
 
         if (ticketDto.getExited() != null && !ticketDto.getExited().isEmpty() && LocalDateTime.parse(ticketDto.getExited(), formatter).isBefore(LocalDateTime.parse(ticketDto.getEntered(), formatter)))
             throw new BadRequestException(Constants.invalidTicketHours);

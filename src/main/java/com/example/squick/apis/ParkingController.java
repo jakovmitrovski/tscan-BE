@@ -23,6 +23,11 @@ public class ParkingController {
         this.parkingService = parkingService;
     }
 
+    @GetMapping
+    public List<Parking> findAll(){
+        return this.parkingService.findAll();
+    }
+
     @GetMapping("/explore")
     public List<Parking> findAllExplore(@RequestParam(required = false, defaultValue = "0") Integer priceFrom,
                                         @RequestParam(required = false, defaultValue = "1000000") Integer priceTo,

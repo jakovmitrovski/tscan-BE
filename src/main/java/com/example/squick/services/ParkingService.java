@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface ParkingService {
 
+    List<Parking> findAll();
+
     List<Parking> findAllExplore(Integer priceFrom, Integer priceTo, boolean openNow, boolean freeSpaces, String keyword);
 
     Optional<ExploreParkingDetailsProjection> findByIdExplore(Long id);

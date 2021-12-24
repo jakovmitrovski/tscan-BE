@@ -17,10 +17,6 @@ public class TicketDto {
 
     String exited;
 
-    public TicketDto(Long parkingId, Long value, String entered, String exited) {
-        this.parkingId = parkingId;
-        this.value = value;
-        this.entered = entered;
-        this.exited = exited;
+    public TicketDto() {
     }
 }
