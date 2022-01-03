@@ -39,29 +39,33 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public Optional<TicketResponseDto> scanTicket(String identifier) {
 
-        if (identifier.length() != Constants.ticketIdentifierLength)
-            throw new BadRequestException(Constants.invalidTicketIdentifier);
-
         try {
             Long.parseLong(identifier);
         } catch (Exception exception) {
             throw new BadRequestException(Constants.invalidTicketIdentifier);
         }
 
-        Long parkingId = Long.parseLong(identifier.substring(0, Constants.ticketIdentifierParkingIdLength));
-        Long ticketValue = Long.parseLong(identifier.substring(Constants.ticketIdentifierParkingIdLength, Constants.ticketIdentifierLength));
+        if (identifier.length() > Constants.ticketIdentifierLength)
+            throw new BadRequestException(Constants.invalidTicketIdentifier);
+
+        Long ticketValue = Long.parseLong(identifier.substring(identifier.length() - Constants.ticketIdentifierValueLength));
+        Long parkingId = Long.parseLong(identifier.substring(0, identifier.length() - Constants.ticketIdentifierValueLength));
 
         Parking parking = parkingRepository.findById(parkingId).orElseThrow(() -> new CustomNotFoundException(Constants.parkingNotFoundMessage));
 
         try {
             Ticket ticket = ticketRepository.findByParking_IdAndValue(parkingId, ticketValue).get();
-            ticket.setExited(LocalDateTime.now());
-            ticket = ticketRepository.save(ticket);
 
-            TicketResponseDto response = new TicketResponseDto(ticket.getParking(), ticket.getEntered().format(formatter), ticket.getExited().format(formatter));
-            double hoursParked = Math.ceil((Duration.between(ticket.getEntered(), ticket.getExited()).getSeconds()) / 3600.0);
-            response.setPrice((long) (hoursParked * parking.getHourlyPrice()));
-            return Optional.of(response);
+            if (ticket.getExited() == null) {
+                ticket.setExited(LocalDateTime.now());
+                ticket = ticketRepository.save(ticket);
+
+                TicketResponseDto response = new TicketResponseDto(ticket.getParking(), ticket.getEntered().format(formatter), ticket.getExited().format(formatter));
+                double hoursParked = Math.ceil((Duration.between(ticket.getEntered(), ticket.getExited()).getSeconds()) / 3600.0);
+                response.setPrice((long) (hoursParked * parking.getHourlyPrice()));
+                return Optional.of(response);
+            } else
+                throw new BadRequestException(Constants.badRequest);
         } catch (Exception exception) {
             throw new CustomNotFoundException(Constants.ticketDoesNotExist);
         }
