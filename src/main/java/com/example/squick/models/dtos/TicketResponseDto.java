@@ -10,7 +10,7 @@ public class TicketResponseDto {
 
     String entered;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss")
     String exited;
 
     Long price;
