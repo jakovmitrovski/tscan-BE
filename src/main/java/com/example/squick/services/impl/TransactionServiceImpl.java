@@ -75,6 +75,8 @@ public class TransactionServiceImpl implements TransactionService {
         List<Transaction> transactions = transactionRepository.findByUserIdAndPaymentStatusAndAndTicketId(dto.getUserId(),
                 PaymentStatus.SUCCESSFUL, dto.getTicketId());
 
+        //TODO: Implement timeFrame for payment
+
         Ticket ticket = ticketRepository.findById(dto.getTicketId()).orElseThrow(() -> new CustomNotFoundException(Constants.ticketDoesNotExist));
 
         if (transactions.size() > 0)

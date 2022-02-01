@@ -56,16 +56,14 @@ public class TicketServiceImpl implements TicketService {
         try {
             Ticket ticket = ticketRepository.findByParking_IdAndValue(parkingId, ticketValue).get();
 
-            if (ticket.getExited() == null) {
-                ticket.setExited(LocalDateTime.now());
-                ticket = ticketRepository.save(ticket);
+            ticket.setExited(LocalDateTime.now());
+            ticket = ticketRepository.save(ticket);
 
-                TicketResponseDto response = new TicketResponseDto(ticket.getParking(), ticket.getEntered().format(formatter), ticket.getExited().format(formatter));
-                double hoursParked = Math.ceil((Duration.between(ticket.getEntered(), ticket.getExited()).getSeconds()) / 3600.0);
-                response.setPrice((long) (hoursParked * parking.getHourlyPrice()));
-                return Optional.of(response);
-            } else
-                throw new BadRequestException(Constants.badRequest);
+            TicketResponseDto response = new TicketResponseDto(ticket.getParking(), ticket.getEntered().format(formatter), ticket.getExited().format(formatter));
+            double hoursParked = Math.ceil((Duration.between(ticket.getEntered(), ticket.getExited()).getSeconds()) / 3600.0);
+            response.setPrice((long) (hoursParked * parking.getHourlyPrice()));
+            return Optional.of(response);
+
         } catch (Exception exception) {
             throw new CustomNotFoundException(Constants.ticketDoesNotExist);
         }
