@@ -24,7 +24,11 @@ public interface ExploreParkingDetailsProjection {
 
     Integer getNumberOfFreeSpaces();
 
-    String getImageUrl();
+    String getImageUrlSmall();
+
+    String getImageUrlMedium();
+
+    String getImageUrlLarge();
 
     List<WorkingHours> getWorkingHours();
 }

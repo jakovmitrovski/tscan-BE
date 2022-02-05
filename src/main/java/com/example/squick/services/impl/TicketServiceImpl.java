@@ -100,12 +100,13 @@ public class TicketServiceImpl implements TicketService {
         while (ticketRepository.findByParking_IdAndValue(ticketDto.getParkingId(), ticketValue).isPresent())
             ticketValue = generator.nextInt(999999);
 
-        List<Ticket> currentlyOccupied = ticketRepository.findAllByParking_IdAndExitedEquals(parking.getId(), null);
-        if (currentlyOccupied.size() >= parking.getCapacity())
+        if (parking.getNumberOfFreeSpaces() == 0)
             throw new BadRequestException("Parking is currently full!");
 
         try {
             ticketRepository.save(new Ticket(parking, ticketValue, dateTimeEntered, dateTimeExited));
+            parking.setNumberOfFreeSpaces(parking.getNumberOfFreeSpaces() - 1);
+            parkingRepository.save(parking);
 
             ticketDto.setValue(ticketValue);
             return Optional.of(ticketDto);
@@ -114,7 +115,6 @@ public class TicketServiceImpl implements TicketService {
         }
     }
 
-    //TODO: Refactor?
     private Parking ValidateTicket(TicketDto ticketDto) {
 
         LocalDateTime entered = LocalDateTime.parse(ticketDto.getEntered(), formatter);

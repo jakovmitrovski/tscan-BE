@@ -105,7 +105,9 @@ public class ParkingServiceImpl implements ParkingService {
             parking.setYearlyPrice(parkingDto.getYearlyPrice());
             parking.setCapacity(parkingDto.getCapacity());
             parking.setNumberOfFreeSpaces(parkingDto.getNumberOfFreeSpaces());
-            parking.setImageUrl(parkingDto.getImageUrl());
+            parking.setImageUrlSmall(parkingDto.getImageUrlSmall());
+            parking.setImageUrlMedium(parkingDto.getImageUrlMedium());
+            parking.setImageUrlLarge(parkingDto.getImageUrlLarge());
             parking.setWorkingHours(workingHours);
             this.parkingRepository.save(parking);
             return Optional.of(true);

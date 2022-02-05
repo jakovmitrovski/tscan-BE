@@ -36,12 +36,16 @@ public class ParkingDto {
     @NotNull(message = "Бројот на слободни места е задолжителен!")
     Integer numberOfFreeSpaces;
 
-    String imageUrl;
+    String imageUrlSmall;
+
+    String imageUrlMedium;
+
+    String imageUrlLarge;
 
     @NotEmpty(message = "Работните часови се задолжителни!")
     List<Long> workingHoursIds;
 
-    public ParkingDto(String name, String locationAddress, Double longitude, Double latitude, Integer hourlyPrice, Integer monthlyPrice, Integer yearlyPrice, Integer capacity, Integer numberOfFreeSpaces, String imageUrl, List<Long> workingHours) {
+    public ParkingDto(String name, String locationAddress, Double longitude, Double latitude, Integer hourlyPrice, Integer monthlyPrice, Integer yearlyPrice, Integer capacity, Integer numberOfFreeSpaces, String imageUrlSmall, String imageUrlMedium, String imageUrlLarge, List<Long> workingHours) {
         this.name = name;
         this.locationAddress = locationAddress;
         this.longitude = longitude;
@@ -51,7 +55,9 @@ public class ParkingDto {
         this.yearlyPrice = yearlyPrice;
         this.capacity = capacity;
         this.numberOfFreeSpaces = numberOfFreeSpaces;
-        this.imageUrl = imageUrl;
+        this.imageUrlSmall = imageUrlSmall;
+        this.imageUrlMedium = imageUrlMedium;
+        this.imageUrlLarge = imageUrlLarge;
         this.workingHoursIds = workingHours;
     }
 }

@@ -1,11 +1,13 @@
 package com.example.squick.services.impl;
 
+import com.example.squick.models.Parking;
 import com.example.squick.models.Ticket;
 import com.example.squick.models.Transaction;
 import com.example.squick.models.dtos.TransactionDto;
 import com.example.squick.models.enumerations.PaymentStatus;
 import com.example.squick.models.exceptions.BadRequestException;
 import com.example.squick.models.exceptions.CustomNotFoundException;
+import com.example.squick.repositories.ParkingRepository;
 import com.example.squick.repositories.TicketRepository;
 import com.example.squick.repositories.TransactionRepository;
 import com.example.squick.services.TransactionService;
@@ -16,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,11 +28,14 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final TicketRepository ticketRepository;
+    private final ParkingRepository parkingRepository;
 
     public TransactionServiceImpl(TransactionRepository transactionRepository,
-                                  TicketRepository ticketRepository) {
+                                  TicketRepository ticketRepository,
+                                  ParkingRepository parkingRepository) {
         this.transactionRepository = transactionRepository;
         this.ticketRepository = ticketRepository;
+        this.parkingRepository = parkingRepository;
     }
 
     @Override
@@ -75,8 +82,6 @@ public class TransactionServiceImpl implements TransactionService {
         List<Transaction> transactions = transactionRepository.findByUserIdAndPaymentStatusAndAndTicketId(dto.getUserId(),
                 PaymentStatus.SUCCESSFUL, dto.getTicketId());
 
-        //TODO: Implement timeFrame for payment
-
         Ticket ticket = ticketRepository.findById(dto.getTicketId()).orElseThrow(() -> new CustomNotFoundException(Constants.ticketDoesNotExist));
 
         if (transactions.size() > 0)
@@ -86,8 +91,16 @@ public class TransactionServiceImpl implements TransactionService {
                 if (dto.getPrice() < 0)
                     throw new BadRequestException(Constants.invalidTransactionPrice);
 
+
+                if((ticket.getExited().toEpochSecond(ZoneOffset.UTC)-LocalDateTime.now().toEpochSecond(ZoneOffset.UTC))>300)
+                    throw new BadRequestException(Constants.transactionTimeout);
+
                 Transaction transaction = new Transaction(dto.getUserId(), ticket, dto.getPrice(), dto.getPaymentStatus());
                 this.transactionRepository.save(transaction);
+
+                Parking ticketParking = ticket.getParking();
+                ticketParking.setNumberOfFreeSpaces(ticketParking.getNumberOfFreeSpaces()+1);
+                parkingRepository.save(ticketParking);
                 return Optional.of(true);
 
             } catch (Exception exception) {

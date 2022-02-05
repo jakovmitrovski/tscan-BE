@@ -16,6 +16,7 @@ public class Constants {
 
     public final static String transactionNotFoundMessage = "Трансакцијата не постои!";
     public final static String invalidTransactionPrice = "Невалидна цена за трансакција";
+    public final static String transactionTimeout = "Трансакцијата е невалидна. Ве молиме скенирајте го билетот повторно!";
     public final static String transactionCreatedSuccessfully = "Успешно креирана трансакција!";
     public final static String transactionDeletedSuccessfully = "Трансакцијата е успешно избришана!";
     public final static String transactionAlreadyPaid = "Веќе постои успешна трансакција за овој билет!";

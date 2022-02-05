@@ -14,7 +14,7 @@ public class Parking {
     public Parking() {
     }
 
-    public Parking(String name, String locationAddress, Double longitude, Double latitude, Integer hourlyPrice, Integer monthlyPrice, Integer yearlyPrice, Integer capacity, Integer numberOfFreeSpaces, String imageUrl, List<WorkingHours> workingHours) {
+    public Parking(String name, String locationAddress, Double longitude, Double latitude, Integer hourlyPrice, Integer monthlyPrice, Integer yearlyPrice, Integer capacity, Integer numberOfFreeSpaces, String imageUrlSmall, String imageUrlMedium, String imageUrlLarge, List<WorkingHours> workingHours) {
         this.name = name;
         this.locationAddress = locationAddress;
         this.longitude = longitude;
@@ -24,7 +24,9 @@ public class Parking {
         this.yearlyPrice = yearlyPrice;
         this.capacity = capacity;
         this.numberOfFreeSpaces = numberOfFreeSpaces;
-        this.imageUrl = imageUrl;
+        this.imageUrlSmall = imageUrlSmall;
+        this.imageUrlMedium = imageUrlMedium;
+        this.imageUrlLarge = imageUrlLarge;
         this.workingHours = workingHours;
     }
 
@@ -38,7 +40,9 @@ public class Parking {
         this.yearlyPrice = parkingDto.getYearlyPrice();
         this.capacity = parkingDto.getCapacity();
         this.numberOfFreeSpaces = parkingDto.getNumberOfFreeSpaces();
-        this.imageUrl = parkingDto.getImageUrl();
+        this.imageUrlSmall = parkingDto.getImageUrlSmall();
+        this.imageUrlMedium = parkingDto.getImageUrlMedium();
+        this.imageUrlLarge = parkingDto.getImageUrlLarge();
         this.workingHours = workingHours;
     }
 
@@ -64,7 +68,11 @@ public class Parking {
 
     Integer numberOfFreeSpaces;
 
-    String imageUrl;
+    String imageUrlSmall;
+
+    String imageUrlMedium;
+
+    String imageUrlLarge;
 
     @ManyToMany
     List<WorkingHours> workingHours;
