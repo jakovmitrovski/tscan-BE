@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface ParkingRepository extends JpaRepository<Parking, Long> {
 
-    @Query(value = "select p.id, p.capacity, p.hourly_price, p.image_url, p.latitude, p.location_address, p.longitude, p.monthly_price, p.name, p.number_of_free_spaces, p.yearly_price  from (parkings p join parkings_working_hours pw on p.id = pw.parking_id join working_hours w on pw.working_hours_id = w.id) where p.number_of_free_spaces >= CASE WHEN :freeSpaces = true THEN 1 ELSE 0 END and w.day_of_week = :day and :time >= w.time_from and :time <= w.time_to and  p.hourly_price >= :priceselect and p.hourly_price <= :priceTo and (p.name like :keyword or p.location_address like :keyword)", nativeQuery = true)
+    @Query(value = "select p.id, p.capacity, p.hourly_price, p.image_url_small, p.image_url_medium, p.image_url_large, p.latitude, p.location_address, p.longitude, p.monthly_price, p.name, p.number_of_free_spaces, p.yearly_price  from (parkings p join parkings_working_hours pw on p.id = pw.parking_id join working_hours w on pw.working_hours_id = w.id) where p.number_of_free_spaces >= CASE WHEN :freeSpaces = true THEN 1 ELSE 0 END and w.day_of_week = :day and :time >= w.time_from and :time <= w.time_to and  p.hourly_price >= :priceselect and p.hourly_price <= :priceTo and (p.name like :keyword or p.location_address like :keyword)", nativeQuery = true)
     List<Parking> findAllExploreOpenNow(@Param("priceselect") Integer priceFrom,
                                         @Param("priceTo") Integer priceTo,
                                         @Param("freeSpaces") boolean freeSpaces,
