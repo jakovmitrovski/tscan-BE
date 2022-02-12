@@ -59,7 +59,7 @@ public class TicketServiceImpl implements TicketService {
             ticket.setExited(LocalDateTime.now());
             ticket = ticketRepository.save(ticket);
 
-            TicketResponseDto response = new TicketResponseDto(ticket.getParking(), ticket.getEntered().format(formatter), ticket.getExited().format(formatter));
+            TicketResponseDto response = new TicketResponseDto(ticket.getId(), ticket.getParking(), ticket.getEntered().format(formatter), ticket.getExited().format(formatter));
             double hoursParked = Math.ceil((Duration.between(ticket.getEntered(), ticket.getExited()).getSeconds()) / 3600.0);
             response.setPrice((long) (hoursParked * parking.getHourlyPrice()));
             return Optional.of(response);

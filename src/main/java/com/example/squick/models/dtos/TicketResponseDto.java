@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 public class TicketResponseDto {
+    Long id;
     Parking parking;
 
     String entered;
@@ -15,7 +16,8 @@ public class TicketResponseDto {
 
     Long price;
 
-    public TicketResponseDto(Parking parking, String entered, String exited) {
+    public TicketResponseDto(Long id, Parking parking, String entered, String exited) {
+        this.id = id;
         this.parking = parking;
         this.entered = entered;
         this.exited = exited;
