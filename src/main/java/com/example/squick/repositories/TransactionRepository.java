@@ -18,5 +18,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query(value = "select * from transactions t where t.user_id=:userId and t.payment_status='SUCCESSFUL' and t.created_at >= CAST(:periodFrom as date ) and t.created_at <= CAST(:periodTo as date )", nativeQuery = true)
     Page<Transaction> filterTransactions(String userId, String periodFrom, String periodTo, Pageable pageable);
 
-    List<Transaction> findByUserIdAndPaymentStatusAndAndTicketId(String userId, PaymentStatus status, Long ticketId);
+    List<Transaction> findByPaymentStatusAndAndTicketId(PaymentStatus status, Long ticketId);
 }

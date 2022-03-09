@@ -79,8 +79,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Optional<Boolean> save(TransactionDto dto) {
 
-        List<Transaction> transactions = transactionRepository.findByUserIdAndPaymentStatusAndAndTicketId(dto.getUserId(),
-                PaymentStatus.SUCCESSFUL, dto.getTicketId());
+        List<Transaction> transactions = transactionRepository.findByPaymentStatusAndAndTicketId(PaymentStatus.SUCCESSFUL, dto.getTicketId());
 
         Ticket ticket = ticketRepository.findById(dto.getTicketId()).orElseThrow(() -> new CustomNotFoundException(Constants.ticketDoesNotExist));
 
@@ -92,14 +91,14 @@ public class TransactionServiceImpl implements TransactionService {
                     throw new BadRequestException(Constants.invalidTransactionPrice);
 
 
-                if((ticket.getExited().toEpochSecond(ZoneOffset.UTC)-LocalDateTime.now().toEpochSecond(ZoneOffset.UTC))>300)
+                if ((ticket.getExited().toEpochSecond(ZoneOffset.UTC) - LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) > 300)
                     throw new BadRequestException(Constants.transactionTimeout);
 
                 Transaction transaction = new Transaction(dto.getUserId(), ticket, dto.getPrice(), dto.getPaymentStatus());
                 this.transactionRepository.save(transaction);
 
                 Parking ticketParking = ticket.getParking();
-                ticketParking.setNumberOfFreeSpaces(ticketParking.getNumberOfFreeSpaces()+1);
+                ticketParking.setNumberOfFreeSpaces(ticketParking.getNumberOfFreeSpaces() + 1);
                 parkingRepository.save(ticketParking);
                 return Optional.of(true);
 
@@ -115,8 +114,7 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction transaction = transactionRepository.findById(id).orElseThrow(() -> new CustomNotFoundException(Constants.transactionNotFoundMessage));
         Ticket ticket = ticketRepository.findById(dto.getTicketId()).orElseThrow(() -> new CustomNotFoundException(Constants.ticketDoesNotExist));
 
-        List<Transaction> transactions = transactionRepository.findByUserIdAndPaymentStatusAndAndTicketId(dto.getUserId(),
-                PaymentStatus.SUCCESSFUL, ticket.getId());
+        List<Transaction> transactions = transactionRepository.findByPaymentStatusAndAndTicketId(PaymentStatus.SUCCESSFUL, ticket.getId());
 
         if (transactions.size() > 0)
             throw new BadRequestException(Constants.transactionAlreadyPaid);
