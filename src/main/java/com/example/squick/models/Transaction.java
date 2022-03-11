@@ -34,7 +34,6 @@ public class Transaction {
     Ticket ticket;
 
     @CreationTimestamp
-    @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss")
     LocalDateTime createdAt;
 
     Integer price;
