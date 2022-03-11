@@ -27,7 +27,7 @@ public class TransactionController {
                                           @RequestParam int year,
                                           @RequestParam int month,
                                           @RequestParam(required = false, defaultValue = "0") Integer start,
-                                          @RequestParam(required = false, defaultValue = "10") Integer items) {
+                                          @RequestParam(required = false, defaultValue = "100") Integer items) {
         return transactionService.filterTransactionsForUser(userId, year, month, start, items);
     }
 
