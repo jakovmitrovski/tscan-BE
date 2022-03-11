@@ -39,8 +39,9 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Transaction> findAllTransactionsForUser(String userId) {
-        return transactionRepository.findByUserId(userId);
+    public Page<Transaction> findAllTransactionsForUser(String userId, int start, int items) {
+        Pageable pageable = PageRequest.of(start, items);
+        return transactionRepository.findByUserId(userId, pageable);
     }
 
     @Override

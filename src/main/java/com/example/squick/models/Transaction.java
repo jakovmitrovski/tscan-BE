@@ -3,6 +3,7 @@ package com.example.squick.models;
 import com.example.squick.models.enumerations.PaymentStatus;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -33,6 +34,7 @@ public class Transaction {
     Ticket ticket;
 
     @CreationTimestamp
+    @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss")
     LocalDateTime createdAt;
 
     Integer price;

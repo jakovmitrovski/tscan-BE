@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface TransactionService {
 
-    List<Transaction> findAllTransactionsForUser(String userId);
+    Page<Transaction> findAllTransactionsForUser(String userId, int start, int items);
 
     Page<Transaction> filterTransactionsForUser(String userId, int year, int month, int start, int items);
 

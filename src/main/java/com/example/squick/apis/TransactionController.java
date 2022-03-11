@@ -31,6 +31,13 @@ public class TransactionController {
         return transactionService.filterTransactionsForUser(userId, year, month, start, items);
     }
 
+    @GetMapping("/{userId}/all")
+    Page<Transaction> findAllForUser(@PathVariable String userId,
+                                     @RequestParam(required = false, defaultValue = "0") Integer start,
+                                     @RequestParam(required = false, defaultValue = "15") Integer items) {
+        return transactionService.findAllTransactionsForUser(userId, start, items);
+    }
+
     @DeleteMapping("/{id}")
     ResponseEntity<ResponseMessage> deleteTransaction(@PathVariable Long id) {
 
