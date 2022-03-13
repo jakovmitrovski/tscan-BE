@@ -47,7 +47,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Page<Transaction> filterTransactionsForUser(String userId, int year, int month, int start, int items) {
 
-        if (month < 0 || month > 12 || year < 2000)
+        if (month < 1 || month > 12 || year < 2000)
             throw new BadRequestException(Constants.badRequest);
 
         LocalDate periodFrom = LocalDate.of(year, month, 1);
@@ -62,6 +62,19 @@ public class TransactionServiceImpl implements TransactionService {
         return transactionRepository.filterTransactions(userId, periodFrom.toString(), periodTo.toString(), pageable);
     }
 
+    @Override
+    public Long totalCostsForUserForMonth(String userId, int year, int month) {
+        if (month < 1 || month > 12 || year < 2000)
+            throw new BadRequestException(Constants.badRequest);
+
+        LocalDate periodFrom = LocalDate.of(year, month, 1);
+        LocalDate periodTo =
+                (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12)
+                        ? LocalDate.of(year, month, 31)
+                        : (month == 4 || month == 6 || month == 9 || month == 11) ? LocalDate.of(year, month, 30)
+                        : (year % 4 == 0) ? LocalDate.of(year, month, 29) : LocalDate.of(year, month, 28);
+        return transactionRepository.totalCostsForUserForMonth(userId, periodFrom.toString(), periodTo.toString());
+    }
 
     @Override
     public Optional<Boolean> delete(Long id) {

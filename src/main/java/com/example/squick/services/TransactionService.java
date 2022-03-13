@@ -13,6 +13,8 @@ public interface TransactionService {
 
     Page<Transaction> filterTransactionsForUser(String userId, int year, int month, int start, int items);
 
+    Long totalCostsForUserForMonth(String userId, int year, int month);
+
     Optional<Boolean> delete(Long id);
 
     Optional<Boolean> save(TransactionDto dto);

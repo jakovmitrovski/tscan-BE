@@ -3,6 +3,7 @@ package com.example.squick.apis;
 import com.example.squick.models.Transaction;
 import com.example.squick.models.dtos.TransactionDto;
 import com.example.squick.models.exceptions.CustomNotFoundException;
+import com.example.squick.models.responses.ResponseAggregator;
 import com.example.squick.models.responses.ResponseMessage;
 import com.example.squick.services.TransactionService;
 import com.example.squick.utils.Constants;
@@ -36,6 +37,15 @@ public class TransactionController {
                                      @RequestParam(required = false, defaultValue = "0") Integer start,
                                      @RequestParam(required = false, defaultValue = "15") Integer items) {
         return transactionService.findAllTransactionsForUser(userId, start, items);
+    }
+
+    @GetMapping("/{userId}/sum")
+    ResponseEntity<ResponseAggregator> findCostsForUser(@PathVariable String userId,
+                                                        @RequestParam int year,
+                                                        @RequestParam int month) {
+        Long sum = transactionService.totalCostsForUserForMonth(userId, year, month);
+        ResponseAggregator aggregator = new ResponseAggregator(sum == null ? 0 : sum);
+        return ResponseEntity.ok(aggregator);
     }
 
     @DeleteMapping("/{id}")
