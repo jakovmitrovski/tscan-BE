@@ -15,6 +15,7 @@ import com.example.squick.utils.Constants;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -57,7 +58,9 @@ public class TransactionServiceImpl implements TransactionService {
                         : (month == 4 || month == 6 || month == 9 || month == 11) ? LocalDate.of(year, month, 30)
                         : (year % 4 == 0) ? LocalDate.of(year, month, 29) : LocalDate.of(year, month, 28);
 
-        Pageable pageable = PageRequest.of(start, items);
+        Sort customSort = Sort.by("created_at").descending();
+
+        Pageable pageable = PageRequest.of(start, items, customSort);
 
         return transactionRepository.filterTransactions(userId, periodFrom.toString(), periodTo.toString(), pageable);
     }
