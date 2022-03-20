@@ -109,7 +109,7 @@ public class TicketServiceImpl implements TicketService {
         Random generator = new Random();
         long ticketValue = generator.nextInt(999999);
 
-        while (ticketRepository.findByParking_IdAndValue(ticketDto.getParkingId(), ticketValue).isPresent())
+        while (ticketRepository.findByParking_IdAndValue(ticketDto.getParkingId(), ticketValue).isPresent() || ticketValue<100000)
             ticketValue = generator.nextInt(999999);
 
         if (parking.getNumberOfFreeSpaces() == 0)
