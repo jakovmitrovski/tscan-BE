@@ -33,5 +33,7 @@ public class Constants {
     public final static String workingHoursCreatedSuccessfully = "Успешно креирано работно времиње!";
     public final static String workingHoursDeletedSuccessfully = "Успешно избришано работно време!";
 
+    public final static String errorGeneratingPaymentIntent = "Настана грешка при генерирање на намерата за плаќање!";
+
 
 }
