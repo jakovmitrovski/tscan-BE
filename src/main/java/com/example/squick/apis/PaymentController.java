@@ -44,7 +44,7 @@ public class PaymentController {
                 .orElseThrow(() -> new CustomNotFoundException(Constants.parkingNotFoundMessage));
     }
 
-    @RequestMapping(value = "/webhook", method = RequestMethod.POST)
+    @PostMapping("/webhook")
     public ResponseEntity<String> webhook(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) {
         Event event = null;
         try {

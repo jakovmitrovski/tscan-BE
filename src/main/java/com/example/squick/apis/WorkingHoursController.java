@@ -7,6 +7,7 @@ import com.example.squick.models.responses.ResponseMessage;
 import com.example.squick.services.WorkingHoursService;
 import com.example.squick.utils.Constants;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class WorkingHoursController {
         return workingHoursService.findAllWorkingHoursForParking(parkingId);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping()
     ResponseEntity<ResponseMessage> addNewWorkingHoursForParking(@RequestBody WorkingHoursDto dto) {
 
@@ -36,6 +38,7 @@ public class WorkingHoursController {
 
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     ResponseEntity<ResponseMessage> editWorkingHoursForParking(@PathVariable Long id,
                                                                @RequestBody WorkingHoursDto dto) {
@@ -46,6 +49,7 @@ public class WorkingHoursController {
                 .orElseThrow(() -> new BadRequestException(Constants.badRequest));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     ResponseEntity<ResponseMessage> deleteWorkingHours(@PathVariable Long id) {
 

@@ -8,6 +8,7 @@ import com.example.squick.models.responses.ResponseMessage;
 import com.example.squick.services.ParkingService;
 import com.example.squick.utils.Constants;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -43,6 +44,7 @@ public class ParkingController {
                 .orElseThrow(() -> new CustomNotFoundException(Constants.parkingNotFoundMessage));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<ResponseMessage> createParking(@Valid @RequestBody ParkingDto parkingDto) {
         ResponseMessage message = new ResponseMessage(Constants.parkingCreatedSuccessfully);
@@ -50,14 +52,17 @@ public class ParkingController {
                 .orElseThrow(() -> new CustomNotFoundException(Constants.parkingNotFoundMessage));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseMessage> editParking(@Valid @RequestBody ParkingDto parkingDto, @PathVariable Long id) {
+    public ResponseEntity<ResponseMessage> editParking(@Valid @RequestBody ParkingDto parkingDto,
+                                                       @PathVariable Long id) {
         ResponseMessage message = new ResponseMessage(Constants.editSuccessful);
 
         return this.parkingService.edit(parkingDto, id).map(success -> ResponseEntity.ok().body(message))
                 .orElseThrow(() -> new CustomNotFoundException(Constants.parkingNotFoundMessage));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseMessage> deleteParking(@PathVariable Long id) {
         ResponseMessage message = new ResponseMessage(Constants.parkingDeletedSuccessfully);

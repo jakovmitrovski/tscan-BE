@@ -9,6 +9,7 @@ import com.example.squick.services.TransactionService;
 import com.example.squick.utils.Constants;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -48,6 +49,7 @@ public class TransactionController {
         return ResponseEntity.ok(aggregator);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     ResponseEntity<ResponseMessage> deleteTransaction(@PathVariable Long id) {
 
@@ -58,6 +60,7 @@ public class TransactionController {
 
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     ResponseEntity<ResponseMessage> editTransaction(@PathVariable Long id,
                                                     @Valid @RequestBody TransactionDto dto) {
@@ -68,6 +71,7 @@ public class TransactionController {
                 .orElseThrow(() -> new CustomNotFoundException(Constants.transactionNotFoundMessage));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping()
     ResponseEntity<ResponseMessage> createTransaction(@Valid @RequestBody TransactionDto dto) {
 
