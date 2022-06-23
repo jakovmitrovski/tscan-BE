@@ -85,7 +85,7 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
         if (workingHours.getTimeFrom().isAfter(workingHours.getTimeTo()))
             throw new BadRequestException(Constants.invalidWorkingHoursTimes);
 
-        if (workingHours.getDayOfWeek().getValue() < 0 || workingHours.getDayOfWeek().getValue() > 6)
+        if (workingHours.getDayOfWeek().getValue() < 0 || workingHours.getDayOfWeek().getValue() > 7)
             throw new BadRequestException(Constants.badRequest);
     }
 }
