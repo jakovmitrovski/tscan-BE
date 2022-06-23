@@ -2,7 +2,10 @@ package com.example.squick.apis;
 
 import com.example.squick.models.Parking;
 import com.example.squick.models.dtos.TicketDto;
+import com.example.squick.models.exceptions.BadRequestException;
 import com.example.squick.models.projections.ExploreParkingDetailsProjection;
+import com.example.squick.services.TicketService;
+import com.example.squick.utils.Constants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,14 +19,14 @@ import java.util.List;
 public class TicketGeneratorController {
 
     private final ParkingController parkingController;
-    private final TicketController ticketController;
+    private final TicketService ticketService;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
     public TicketGeneratorController(ParkingController parkingController,
-                                     TicketController ticketController) {
+                                     TicketService ticketService) {
         this.parkingController = parkingController;
-        this.ticketController = ticketController;
+        this.ticketService = ticketService;
     }
 
     @GetMapping
@@ -58,8 +61,7 @@ public class TicketGeneratorController {
         newTicket.setParkingId(parkingId);
 
         try{
-            TicketDto generatedTicket = ticketController.createNewTicket(parkingId).getBody();
-
+            TicketDto generatedTicket = ticketService.create(newTicket).orElseThrow(() -> new BadRequestException(Constants.badRequest));
             StringBuilder ticketIdentifier = new StringBuilder();
             ticketIdentifier.append(parkingId);
             ticketIdentifier.append(generatedTicket.getValue());
