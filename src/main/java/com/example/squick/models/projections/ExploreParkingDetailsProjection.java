@@ -5,7 +5,6 @@ import com.example.squick.models.WorkingHours;
 import java.util.List;
 
 public interface ExploreParkingDetailsProjection {
-
     String getName();
 
     String getLocationAddress();

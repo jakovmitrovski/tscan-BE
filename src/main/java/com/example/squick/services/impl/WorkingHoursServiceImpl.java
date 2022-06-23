@@ -68,14 +68,14 @@ public class WorkingHoursServiceImpl implements WorkingHoursService {
     }
 
     @Override
-    public Optional<Boolean> createWorkingHoursForParking(WorkingHoursDto workingHours) {
+    public Optional<WorkingHours> createWorkingHoursForParking(WorkingHoursDto workingHours) {
 
         ValidateWorkingHours(workingHours);
 
         try {
-            workingHoursRepository.save(new WorkingHours(workingHours.getTimeFrom(), workingHours.getTimeTo(), workingHours.getDayOfWeek()));
+            WorkingHours ret = workingHoursRepository.save(new WorkingHours(workingHours.getTimeFrom(), workingHours.getTimeTo(), workingHours.getDayOfWeek()));
 
-            return Optional.of(true);
+            return Optional.of(ret);
         } catch (Exception exception) {
             throw new BadRequestException(Constants.badRequest);
         }

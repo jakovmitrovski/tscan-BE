@@ -29,11 +29,8 @@ public class WorkingHoursController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping()
-    ResponseEntity<ResponseMessage> addNewWorkingHoursForParking(@RequestBody WorkingHoursDto dto) {
-
-        ResponseMessage message = new ResponseMessage(Constants.workingHoursCreatedSuccessfully);
-
-        return workingHoursService.createWorkingHoursForParking(dto).map(success -> ResponseEntity.ok(message))
+    ResponseEntity<WorkingHours> addNewWorkingHoursForParking(@RequestBody WorkingHoursDto dto) {
+        return workingHoursService.createWorkingHoursForParking(dto).map(success -> ResponseEntity.ok(success))
                 .orElseThrow(() -> new BadRequestException(Constants.badRequest));
 
     }
