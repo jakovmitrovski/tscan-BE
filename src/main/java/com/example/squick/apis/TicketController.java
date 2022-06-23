@@ -33,12 +33,11 @@ public class TicketController {
     }
 
     @PostMapping("/{parkingId}")
-    ResponseEntity<ResponseMessage> createNewTicket(@Valid @PathVariable Long parkingId) {
+    ResponseEntity<TicketDto> createNewTicket(@Valid @PathVariable Long parkingId) {
         TicketDto newTicket = new TicketDto();
         newTicket.setEntered(LocalDateTime.now().format(formatter));
         newTicket.setParkingId(parkingId);
-        ResponseMessage message = new ResponseMessage(Constants.ticketCreatedSuccessfully);
-        return ticketService.create(newTicket).map(success -> ResponseEntity.ok(message))
+        return ticketService.create(newTicket).map(success -> ResponseEntity.ok(success))
                 .orElseThrow(() -> new BadRequestException(Constants.badRequest));
 
     }
