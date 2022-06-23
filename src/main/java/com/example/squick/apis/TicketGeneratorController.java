@@ -58,7 +58,7 @@ public class TicketGeneratorController {
         newTicket.setParkingId(parkingId);
 
         try{
-            TicketDto generatedTicket = ticketController.createNewTicket(newTicket).getBody();
+            TicketDto generatedTicket = ticketController.createNewTicket(parkingId).getBody();
 
             StringBuilder ticketIdentifier = new StringBuilder();
             ticketIdentifier.append(parkingId);

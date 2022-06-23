@@ -11,12 +11,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("/tickets")
 public class TicketController {
 
     private final TicketService ticketService;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
     public TicketController(TicketService ticketService) {
         this.ticketService = ticketService;
@@ -29,10 +32,12 @@ public class TicketController {
                 .orElseThrow(() -> new BadRequestException(Constants.badRequest));
     }
 
-    @PostMapping
-    ResponseEntity<TicketDto> createNewTicket(@Valid @RequestBody TicketDto ticketDto) {
-
-        return ticketService.create(ticketDto).map(success -> ResponseEntity.ok(success))
+    @PostMapping("/{parkingId}")
+    ResponseEntity<TicketDto> createNewTicket(@Valid @PathVariable Long parkingId) {
+        TicketDto newTicket = new TicketDto();
+        newTicket.setEntered(LocalDateTime.now().format(formatter));
+        newTicket.setParkingId(parkingId);
+        return ticketService.create(newTicket).map(success -> ResponseEntity.ok(success))
                 .orElseThrow(() -> new BadRequestException(Constants.badRequest));
 
     }
