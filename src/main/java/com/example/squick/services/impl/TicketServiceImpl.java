@@ -127,6 +127,15 @@ public class TicketServiceImpl implements TicketService {
         }
     }
 
+    @Override
+    public List<Ticket> findAllByParking(Long parkingId) {
+        try {
+            return this.ticketRepository.findAllByParking_IdAndExitedEquals(parkingId, null);
+        }catch (Exception exception) {
+            throw new BadRequestException(Constants.badRequest);
+        }
+    }
+
     private Parking ValidateTicket(TicketDto ticketDto) {
 
         LocalDateTime entered = LocalDateTime.parse(ticketDto.getEntered(), formatter);

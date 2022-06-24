@@ -22,4 +22,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     Long totalCostsForUserForMonth(String userId, String periodFrom, String periodTo);
 
     List<Transaction> findByPaymentStatusAndAndTicketId(PaymentStatus status, Long ticketId);
+
+    @Query(value = "select * from transactions join tickets where transactions.ticket_id=tickets.id and tickets.parking_id=:parkingId", nativeQuery = true)
+    List<Transaction> findAllTransactionsForParking(Long parkingId);
 }

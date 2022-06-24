@@ -20,4 +20,6 @@ public interface TransactionService {
     Optional<Boolean> save(TransactionDto dto);
 
     Optional<Boolean> edit(TransactionDto dto, Long id);
+
+    List<Transaction> findAllTransactionsForParking(Long parkingId);
 }

@@ -1,5 +1,6 @@
 package com.example.squick.apis;
 
+import com.example.squick.models.Ticket;
 import com.example.squick.models.dtos.TicketDto;
 import com.example.squick.models.dtos.TicketResponseDto;
 import com.example.squick.models.exceptions.BadRequestException;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RestController
 @RequestMapping("/tickets")
@@ -50,6 +52,12 @@ public class TicketController {
 
         return ticketService.delete(id).map(success -> ResponseEntity.ok(message))
                 .orElseThrow(() -> new BadRequestException(Constants.badRequest));
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/all/{parkingId}")
+    List<Ticket> findAllByParking(@PathVariable Long parkingId) {
+        return ticketService.findAllByParking(parkingId);
     }
 
 }

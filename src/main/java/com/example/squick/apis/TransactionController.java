@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/transactions")
@@ -80,4 +81,11 @@ public class TransactionController {
         return transactionService.save(dto).map(success -> ResponseEntity.ok(message))
                 .orElseThrow(() -> new CustomNotFoundException(Constants.transactionNotFoundMessage));
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/parking/{parkingId}")
+    List<Transaction> findAllTransactionsForParking(@PathVariable Long parkingId) {
+        return transactionService.findAllTransactionsForParking(parkingId);
+    }
+
 }

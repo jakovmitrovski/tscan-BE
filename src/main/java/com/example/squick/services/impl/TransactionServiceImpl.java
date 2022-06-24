@@ -150,4 +150,13 @@ public class TransactionServiceImpl implements TransactionService {
             throw new BadRequestException(Constants.badRequest);
         }
     }
+
+    @Override
+    public List<Transaction> findAllTransactionsForParking(Long parkingId) {
+        try {
+            return transactionRepository.findAllTransactionsForParking(parkingId);
+        }catch(Exception exception) {
+            throw new BadRequestException(Constants.badRequest);
+        }
+    }
 }
